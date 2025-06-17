@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Personal Profile - Premium Modern Website</title>
+<link
+  href="https://fonts.googleapis.com/icon?family=Material+Icons"
+  rel="stylesheet"
+/>
+<style>
+  /* Reset & base */
+  :root {
+    --color-bg-light: #f9f9fc;
+    --color-bg-dark: #121214;
+    --color-primary: #6366f1;
+    --color-secondary: #4ade80;
+    --color-accent: #8b5cf6;
+    --color-text-light: #1e293b;
+    --color-text-dark: #e0e0e0;
+    --color-error: #ef4444;
+    --color-success: #22c55e;
+    --color-info: #3b82f6;
+    --color-warning: #f59e0b;
+
+    --spacing-xs: 8px;
+    --spacing-sm: 16px;
+    --spacing-md: 24px;
+    --spacing-lg: 32px;
+    --spacing-xl: 48px;
+
+    --border-radius: 12px;
+
+    --shadow-card-light: 0 8px 24px rgba(99, 102, 241, 0.15);
+    --shadow-card-dark: 0 8px 24px rgba(0, 0, 0, 0.7);
+  }
+
+  html {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+      Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+      sans-serif;
+    font-size: clamp(14px, 1vw + 0.5rem, 18px);
+    line-height: 1.5;
+    scroll-behavior: smooth;
+    background-color: var(--color-bg-light);
+    color: var(--color-text-light);
+  }
+
+  body {
+    margin: 0;
+    display: grid;
+    grid-template-rows: 64px 1fr auto;
+    min-height: 100vh;
+  }
+
+  /* Dark mode */
+  body.dark {
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-dark);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 10px;
+  }
+
+  /* Header */
+  header {
+    height: 64px;
+    position: sticky;
+    top: 0;
+    background: rgba(255 255 255 / 0.15);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(99 102 241 / 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--spacing-md);
+    z-index: 1000;
+    box-shadow: var(--shadow-card-light);
+  }
+  body.dark header {
+    background: rgba(18 18 20 / 0.7);
+    border-bottom-color: rgba(255 255 255 / 0.1);
+    box-shadow: var(--shadow-card-dark);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: clamp(1.25rem, 1vw + 0.25rem, 1.5rem);
+    gap: var(--spacing-sm);
+    color: var(--color-primary);
+    cursor: default;
+    user-select: none;
+  }
+
+  .brand .material-icons {
+    font-size: clamp(1.5rem, 1vw + 1rem, 2rem);
+  }
+
+  /* Theme toggle */
+  #theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-primary);
+    font-size: 24px;
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s ease;
+  }
+  #theme-toggle:focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 2px;
+  }
+  #theme-toggle:hover {
+    background-color: rgba(99, 102, 241, 0.15);
+  }
+  body.dark #theme-toggle {
+    color: var(--color-secondary);
+  }
+  body.dark #theme-toggle:hover {
+    background-color: rgba(74, 222, 128, 0.2);
+  }
+
+  /* Layout */
+  .app-container {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    grid-template-rows: 1fr;
+    overflow: hidden;
+    height: calc(100vh - 64px);
+  }
+
+  /* Responsive: mobile */
+  @media (max-width: 767px) {
+    .app-container {
+      grid-template-columns: 0 1fr;
+      position: relative;
+    }
+  }
+
+  /* Sidebar */
+  aside.sidebar {
+    background: rgba(99 102 241 / 0.1);
+    backdrop-filter: blur(16px);
+    box-shadow: var(--shadow-card-light);
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+    z-index: 1400;
+  }
+  body.dark aside.sidebar {
+    background: rgba(74 222 128 / 0.1);
+    box-shadow: var(--shadow-card-dark);
+  }
+
+  /* Hide sidebar on mobile by default */
+  @media (max-width: 767px) {
+    aside.sidebar {
+      position: fixed;
+      width: 280px;
+      height: calc(100vh - 64px);
+      left: 0;
+      top: 64px;
+      transform: translateX(-100%);
+      border-right: 1px solid rgba(99 102 241 / 0.15);
+    }
+    body.dark aside.sidebar {
+      border-right-color: rgba(255 255 255 / 0.1);
+    }
+    aside.sidebar.open {
+      transform: translateX(0);
+      box-shadow: 5px 5px 40px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  /* Sidebar header user */
+  .sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+  .sidebar-user img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-primary);
+  }
+  body.dark .sidebar-user img {
+    border-color: var(--color-secondary);
+  }
+  .sidebar-user .user-name {
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+  body.dark .sidebar-user .user-name {
+    color: var(--color-secondary);
+  }
+  .sidebar-user .user-role {
+    font-size: 0.85rem;
+    color: gray;
+  }
+  body.dark .sidebar-user .user-role {
+    color: #a6a6a6;
+  }
+
+  /* Navigation */
+  nav.sidebar-nav {
+    flex-grow: 1;
+  }
+  nav.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+  nav.sidebar-nav ul li {
+    position: relative;
+  }
+  nav.sidebar-nav a {
+    text-decoration: none;
+    color: var(--color-text-light);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: clamp(0.9rem, 1vw + 0.1rem, 1rem);
+    transition: background-color 0.25s, color 0.25s;
+  }
+  nav.sidebar-nav a:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+  nav.sidebar-nav a:hover,
+  nav.sidebar-nav a.active {
+    background: var(--color-primary);
+    color: white;
+  }
+  body.dark nav.sidebar-nav a {
+    color: var(--color-text-dark);
+  }
+  body.dark nav.sidebar-nav a:hover,
+  body.dark nav.sidebar-nav a.active {
+    background: var(--color-secondary);
+  }
+  nav.sidebar-nav a .material-icons {
+    font-size: 24px;
+  }
+  nav.sidebar-nav a .badge {
+    margin-left: auto;
+    background: var(--color-error);
+    color: white;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 15px;
+    font-weight: 700;
+  }
+  body.dark nav.sidebar-nav a .badge {
+    background: #f87171;
+  }
+
+  /* Sidebar toggle button on mobile */
+  button#sidebar-toggle {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    background: var(--color-primary);
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: none;
+    color: white;
+    cursor: pointer;
+    z-index: 1500;
+    box-shadow: 0 6px 12px rgb(99 102 241 / 0.3);
+    transition: background-color 0.25s ease;
+  }
+
+  button#sidebar-toggle:focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 2px;
+  }
+
+  button#sidebar-toggle:hover {
+    background-color: var(--color-accent);
+  }
+
+  @media (max-width: 767px) {
+    button#sidebar-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  main.content {
+    padding: var(--spacing-lg);
+    overflow-y: auto;
+    min-height: calc(100vh - 64px);
+  }
+  body.dark main.content {
+    background-color: #18181b;
+  }
+
+  /* Content Cards */
+  .card {
+    background: rgba(255 255 255 / 0.1);
+    backdrop-filter: blur(16px);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-card-light);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+  }
+  body.dark .card {
+    background: rgba(0 0 0 / 0.5);
+    box-shadow: var(--shadow-card-dark);
+  }
+  .card:focus-within,
+  .card:hover {
+    box-shadow: 0 20px 40px rgba(99 102 241, 0.3);
+  }
+
+  /* Headings */
+  h1, h2, h3 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+    font-weight: 800;
+  }
+  h1 {
+    font-size: clamp(1.75rem, 2.6vw + 1rem, 3rem);
+  }
+  h2 {
+    font-size: clamp(1.5rem, 2vw + 0.8rem, 2.2rem);
+  }
+  h3 {
+    font-size: clamp(1.2rem, 1.5vw + 0.5rem, 1.6rem);
+  }
+  /* Paragraph */
+  p {
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-light);
+  }
+  body.dark p {
+    color: var(--color-text-dark);
+  }
+
+  /* Form Styles */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  label {
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    display: block;
+  }
+
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  input[type='file'],
+  select,
+  textarea {
+    padding: var(--spacing-sm);
+    border: 1.5px solid #d1d5db;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.25s ease;
+    width: 100%;
+    background-color: #fff;
+    color: #111827;
+  }
+  input[type='text']:focus,
+  input[type='email']:focus,
+  input[type='tel']:focus,
+  input[type='file']:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 8px var(--color-primary);
+    background-color: #f9fafb;
+  }
+  body.dark input[type='text'],
+  body.dark input[type='email'],
+  body.dark input[type='tel'],
+  body.dark input[type='file'],
+  body.dark select,
+  body.dark textarea {
+    background-color: #27272a;
+    color: var(--color-text-dark);
+    border-color: #3f3f46;
+  }
+  body.dark input[type='text']:focus,
+  body.dark input[type='email']:focus,
+  body.dark input[type='tel']:focus,
+  body.dark input[type='file']:focus,
+  body.dark select:focus,
+  body.dark textarea:focus {
+    box-shadow: 0 0 10px var(--color-secondary);
+    background-color: #3f3f46;
+    border-color: var(--color-secondary);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  /* Inline error message */
+  .error-message {
+    color: var(--color-error);
+    font-size: 0.875rem;
+  }
+
+  /* Buttons */
+  button,
+  input[type='submit'] {
+    cursor: pointer;
+    background: var(--color-primary);
+    color: white;
+    font-weight: 700;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: 1rem;
+    border-radius: var(--border-radius);
+    transition: background-color 0.25s ease, transform 0.25s ease;
+    align-self: flex-start;
+  }
+  button:hover,
+  input[type='submit']:hover {
+    background-color: var(--color-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+  }
+  button:focus-visible,
+  input[type='submit']:focus-visible {
+    outline: 3px solid var(--color-secondary);
+    outline-offset: 2px;
+  }
+
+  /* Profile photo preview */
+  .photo-preview {
+    margin-top: var(--spacing-sm);
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--color-primary);
+  }
+  body.dark .photo-preview {
+    border-color: var(--color-secondary);
+  }
+
+  /* Contact info display */
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    font-size: 1rem;
+  }
+  .contact-info div {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+  .contact-info .material-icons {
+    color: var(--color-primary);
+  }
+  body.dark .contact-info .material-icons {
+    color: var(--color-secondary);
+  }
+
+  /* Footer */
+  footer {
+    background: rgba(99 102 241 / 0.15);
+    backdrop-filter: blur(16px);
+    padding: var(--spacing-md);
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--color-primary);
+    border-top: 1px solid rgba(99 102 241 / 0.15);
+    user-select: none;
+  }
+  body.dark footer {
+    background: rgba(74 222 128 / 0.15);
+    color: var(--color-secondary);
+    border-top-color: rgba(74 222 128 / 0.2);
+  }
+  footer a {
+    color: inherit;
+    text-decoration: none;
+    font-weight: 600;
+    margin: 0 var(--spacing-xs);
+    transition: color 0.3s ease;
+  }
+  footer a:hover,
+  footer a:focus-visible {
+    color: var(--color-accent);
+  }
+
+  /* Toast notifications */
+  #toast-container {
+    position: fixed;
+    bottom: var(--spacing-lg);
+    right: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    z-index: 2000;
+  }
+  .toast {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    min-width: 280px;
+    max-width: 320px;
+    background: rgba(255 255 255 / 0.9);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    font-weight: 600;
+    animation: slideInRight 0.4s ease both;
+  }
+  body.dark .toast {
+    background: rgba(30 30 30 / 0.9);
+    color: var(--color-text-dark);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  }
+  .toast.success {
+    border-left: 6px solid var(--color-success);
+  }
+  .toast.error {
+    border-left: 6px solid var(--color-error);
+  }
+  .toast .material-icons {
+    font-size: 20px;
+    color: inherit;
+  }
+
+  .toast button.close-btn {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0;
+  }
+  .toast button.close-btn:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  /* Animations */
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Responsive main section forms */
+  @media (max-width: 767px) {
+    main.content {
+      padding: var(--spacing-md);
+    }
+  }
+
+  /* Focus visibility */
+  :focus-visible {
+    outline-offset: 2px;
+    outline-color: var(--color-primary);
+    outline-style: solid;
+    outline-width: 3px;
+  }
+</style>
+</head>
+<body>
+<header role="banner" aria-label="Primary header">
+  <div class="brand" aria-label="Personal brand logo and site title">
+    <span class="material-icons" aria-hidden="true">person</span>
+    <span>My Profile</span>
+  </div>
+  <button id="theme-toggle" aria-label="Toggle light and dark theme" title="Toggle theme">
+    <span class="material-icons">dark_mode</span>
+  </button>
+</header>
+
+<button id="sidebar-toggle" aria-label="Open sidebar navigation" title="Open sidebar navigation">
+  <span class="material-icons">menu</span>
+</button>
+
+<div class="app-container">
+  <aside class="sidebar" role="navigation" aria-label="Primary sidebar navigation">
+    <div class="sidebar-user" tabindex="0">
+      <img
+        src="u.JPG"
+        alt="User avatar placeholder"
+        loading="lazy"
+      />
+      <div>
+        <div class="user-name" id="user-name-display">Prashant Chaudhary</div>
+        <div class="user-role" id="user-role-display"> Future Software Engineer</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav" aria-label="Primary menu">
+      <ul>
+        <li>
+          <a href="#identity-section" class="active" aria-current="page">
+            <span class="material-icons" aria-hidden="true">badge</span> Identity
+          </a>
+        </li>
+        <li>
+          <a href="#qualification-section">
+            <span class="material-icons" aria-hidden="true">school</span> Qualifications
+          </a>
+        </li>
+        <li>
+          <a href="#photo-section">
+            <span class="material-icons" aria-hidden="true">photo_camera</span> Photo
+            <span class="badge" aria-label="1 new notification">1</span>
+          </a>
+        </li>
+        <li>
+          <a href="#contact-section">
+            <span class="material-icons" aria-hidden="true">contact_mail</span> Contact
+          </a>
+        </li>
+        <li>
+          <a href="#more-section">
+            <span class="material-icons" aria-hidden="true">more_horiz</span> More
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="content" role="main" tabindex="-1">
+    <!-- Identity Section -->
+    <section id="identity-section" class="card" tabindex="0" aria-labelledby="identity-title">
+      <h2 id="identity-title">Identity</h2>
+      <form id="identity-form" novalidate autocomplete="on" aria-describedby="identity-description">
+        <p id="identity-description">Fill in your personal identity details.</p>
+        <label for="full-name">Full Name <span aria-hidden="true"> *</span></label>
+        <input 
+          type="text" 
+          id="full-name"
+          name="fullName" 
+          required 
+          minlength="2" 
+          maxlength="50" 
+          autocomplete="name"
+          aria-required="true" 
+          aria-describedby="full-name-error"
+          />
+        <div class="error-message" id="full-name-error" aria-live="polite"></div>
+
+        <label for="dob">Date of Birth <span aria-hidden="true"> *</span></label>
+        <input
+          type="date"
+          id="dob"
+          name="dob"
+          required
+          aria-required="true"
+          aria-describedby="dob-error"
+        />
+        <div class="error-message" id="dob-error" aria-live="polite"></div>
+
+        <label for="email">Email <span aria-hidden="true"> *</span></label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          autocomplete="email"
+          aria-required="true"
+          aria-describedby="email-error"
+        />
+        <div class="error-message" id="email-error" aria-live="polite"></div>
+
+        <label for="phone">Phone Number</label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          autocomplete="tel"
+          pattern="^\+?[\d\s\-]{7,15}$"
+          aria-describedby="phone-error"
+        />
+        <div class="error-message" id="phone-error" aria-live="polite"></div>
+
+        <label for="bio">Short Bio</label>
+        <textarea
+          id="bio"
+          name="bio"
+          rows="4"
+          maxlength="500"
+          autocomplete="off"
+          aria-describedby="bio-error"
+        ></textarea>
+        <div class="error-message" id="bio-error" aria-live="polite"></div>
+
+        <button type="submit" aria-label="Save identity information">Save Identity</button>
+      </form>
+    </section>
+
+    <!-- Qualification Section -->
+    <section id="qualification-section" class="card" tabindex="0" aria-labelledby="qualification-title">
+      <h2 id="qualification-title">Qualifications</h2>
+      <form id="qualification-form" novalidate autocomplete="on" aria-describedby="qualification-description">
+        <p id="qualification-description">Add your professional qualifications.</p>
+        <label for="highest-degree">Highest Degree <span aria-hidden="true"> *</span></label>
+        <select id="highest-degree" name="highestDegree" required aria-required="true" aria-describedby="highest-degree-error">
+          <option value="">Select one</option>
+          <option value="high-school">High School</option>
+          <option value="associate">Associate Degree</option>
+          <option value="bachelor">Bachelor's Degree</option>
+          <option value="master">Master's Degree</option>
+          <option value="doctorate">Doctorate</option>
+          <option value="other">Other</option>
+        </select>
+        <div class="error-message" id="highest-degree-error" aria-live="polite"></div>
+
+        <label for="field-of-study">Field of Study</label>
+        <input 
+          type="text" 
+          id="field-of-study" 
+          name="fieldOfStudy"
+          maxlength="100"
+          autocomplete="off" 
+          aria-describedby="field-of-study-error"
+        />
+        <div class="error-message" id="field-of-study-error" aria-live="polite"></div>
+
+        <label for="institutions">Institutions Attended</label>
+        <textarea
+          id="institutions"
+          name="institutions"
+          rows="3"
+          maxlength="300"
+          autocomplete="off"
+          aria-describedby="institutions-error"
+        ></textarea>
+        <div class="error-message" id="institutions-error" aria-live="polite"></div>
+
+        <button type="submit" aria-label="Save qualifications">Save Qualifications</button>
+      </form>
+    </section>
+
+    <!-- Photo Section -->
+    <section id="photo-section" class="card" tabindex="0" aria-labelledby="photo-title">
+      <h2 id="photo-title">Photo</h2>
+      <form id="photo-form" novalidate aria-describedby="photo-description" autocomplete="off">
+        <p id="photo-description">Upload your profile photo (Max 2MB, JPEG/PNG).</p>
+        <label for="photo-upload" class="material-icons" style="font-size: 48px; cursor: pointer;" tabindex="0" role="button" aria-label="Upload profile photo">photo_camera</label>
+        <input
+          type="file"
+          id="photo-upload"
+          name="photoUpload"
+          accept="image/jpeg, image/png"
+          style="display:none"
+          aria-describedby="photo-upload-error"
+        />
+        <div class="error-message" id="photo-upload-error" aria-live="polite"></div>
+        <img
+          id="photo-preview"
+          class="photo-preview"
+          alt="Profile photo preview"
+          src="u.JPG"
+          loading="lazy"
+        />
+        <button type="button" id="clear-photo-btn" aria-label="Clear selected photo" style="margin-top: var(--spacing-md); background: var(--color-error);">Clear Photo</button>
+      </form>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact-section" class="card" tabindex="0" aria-labelledby="contact-title">
+      <h2 id="contact-title">Contact</h2>
+      <form id="contact-form" novalidate autocomplete="on" aria-describedby="contact-description">
+        <p id="contact-description">Update your contact details.</p>
+
+        <label for="contact-email">Email <span aria-hidden="true"> *</span></label>
+        <input
+          type="email"
+          id="contact-email"
+          name="contactEmail"
+          required
+          autocomplete="email"
+          aria-required="true"
+          aria-describedby="contact-email-error"
+        />
+        <div class="error-message" id="contact-email-error" aria-live="polite"></div>
+
+        <label for="contact-phone">Phone Number</label>
+        <input
+          type="tel"
+          id="contact-phone"
+          name="contactPhone"
+          pattern="^\+?[\d\s\-]{7,15}$"
+          autocomplete="tel"
+          aria-describedby="contact-phone-error"
+        />
+        <div class="error-message" id="contact-phone-error" aria-live="polite"></div>
+
+        <label for="contact-address">Address</label>
+        <textarea
+          id="contact-address"
+          name="contactAddress"
+          rows="3"
+          maxlength="300"
+        ></textarea>
+
+        <button type="submit" aria-label="Save contact information">Save Contact</button>
+      </form>
+
+      <div class="contact-info" aria-label="Contact details display">
+        <div><span class="material-icons" aria-hidden="true">email</span><span id="contact-email-display">No email provided</span></div>
+        <div><span class="material-icons" aria-hidden="true">phone</span><span id="contact-phone-display">No phone provided</span></div>
+        <div><span class="material-icons" aria-hidden="true">location_on</span><span id="contact-address-display">No address provided</span></div>
+      </div>
+    </section>
+
+    <!-- More Section -->
+    <section id="more-section" class="card" tabindex="0" aria-labelledby="more-title">
+      <h2 id="more-title">More</h2>
+      <p>Additional information, links, or custom content can be added here.</p>
+      <p>
+        This section can be used to showcase projects, hobbies, social links, or anything you'd like
+        to share.
+      </p>
+    </section>
+  </main>
+</div>
+
+<footer role="contentinfo">
+  &copy; 2025 Prashant Chaudhary. Personal website designed .
+  <br />
+  <span> </span>
+  <a href="https://www.instagram.com/stories/prashant__chaudhareeee/3656399598874271976?utm_source=ig_story_item_share&igsh=Zm96YmZjZjh6NG9w" target="_blank" rel="noopener">instagram</a>
+  
+  <span> | </span>
+  <a href="https://www.tiktok.com/@yuraj______1?_t=ZS-8xHWUDbT1mc&_r=1" target="_blank" rel="noopener noreferrer"
+    >tiktok</a
+  >
+  <span> | </span>
+  <a href="https://www.facebook.com/share/16U6BVy8q7/" target="_blank" rel="noopener noreferrer"
+    >Facebook</a
+  >
+</footer>
+
+<div id="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+<script>
+  (() => {
+    'use strict';
+
+    // Theme toggle & persist
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        document.body.classList.add('dark');
+        themeToggleBtn.innerHTML =
+          '<span class="material-icons">light_mode</span>';
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.body.classList.remove('dark');
+        themeToggleBtn.innerHTML =
+          '<span class="material-icons">dark_mode</span>';
+        localStorage.setItem('theme', 'light');
+      }
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      const isDark = document.body.classList.contains('dark');
+      applyTheme(isDark ? 'light' : 'dark');
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (
+      savedTheme === 'dark' ||
+      (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
+      applyTheme('dark');
+    } else {
+      applyTheme('light');
+    }
+
+    // Sidebar toggle on mobile
+    const sidebarToggleBtn = document.getElementById('sidebar-toggle');
+    const sidebar = document.querySelector('aside.sidebar');
+
+    sidebarToggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+    });
+
+    // Close sidebar on outside click on mobile
+    document.addEventListener('click', (e) => {
+      if (
+        !sidebar.contains(e.target) &&
+        !sidebarToggleBtn.contains(e.target) &&
+        sidebar.classList.contains('open')
+      ) {
+        sidebar.classList.remove('open');
+      }
+    });
+
+    // Active nav link highlight & smooth scroll
+    const navLinks = document.querySelectorAll('nav.sidebar-nav a');
+    navLinks.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (sidebar.classList.contains('open')) {
+          sidebar.classList.remove('open');
+        }
+        navLinks.forEach((l) => l.classList.remove('active'));
+        link.classList.add('active');
+
+        const targetID = link.getAttribute('href').substring(1);
+        const targetSection = document.getElementById(targetID);
+        if (targetSection) {
+          targetSection.focus();
+          window.scrollTo({
+            top:
+              targetSection.getBoundingClientRect().top +
+              window.pageYOffset -
+              64,
+            behavior: 'smooth',
+          });
+        }
+      });
+    });
+
+    // Toast notification system
+    const toastContainer = document.getElementById('toast-container');
+
+    function showToast(message, type = 'success', duration = 3000) {
+      const toast = document.createElement('div');
+      toast.className = 'toast ' + type;
+      toast.setAttribute('role', 'alert');
+      toast.setAttribute('aria-live', 'assertive');
+
+      const icon = document.createElement('span');
+      icon.className = 'material-icons';
+      switch (type) {
+        case 'success':
+          icon.textContent = 'check_circle';
+          break;
+        case 'error':
+          icon.textContent = 'error';
+          break;
+        default:
+          icon.textContent = 'info';
+          break;
+      }
+      toast.appendChild(icon);
+
+      const text = document.createElement('div');
+      text.textContent = message;
+      toast.appendChild(text);
+
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'close-btn';
+      closeBtn.setAttribute('aria-label', 'Close notification');
+      closeBtn.innerHTML = '<span class="material-icons">close</span>';
+      closeBtn.addEventListener('click', () => {
+        toastContainer.removeChild(toast);
+      });
+      toast.appendChild(closeBtn);
+
+      toastContainer.appendChild(toast);
+
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toastContainer.removeChild(toast);
+        }
+      }, duration);
+    }
+
+    // Identity form validation & save
+    const identityForm = document.getElementById('identity-form');
+    const identityFields = {
+      fullName: identityForm.elements.fullName,
+      dob: identityForm.elements.dob,
+      email: identityForm.elements.email,
+      phone: identityForm.elements.phone,
+      bio: identityForm.elements.bio,
+    };
+    const identityErrors = {
+      fullName: document.getElementById('full-name-error'),
+      dob: document.getElementById('dob-error'),
+      email: document.getElementById('email-error'),
+      phone: document.getElementById('phone-error'),
+      bio: document.getElementById('bio-error'),
+    };
+
+    function validateIdentityField(field) {
+      let isValid = true;
+      let message = '';
+      switch (field.name) {
+        case 'fullName':
+          if (!field.value.trim()) {
+            isValid = false;
+            message = 'Full name is required.';
+          } else if (field.value.trim().length < 2) {
+            isValid = false;
+            message = 'Full name must be at least 2 characters.';
+          } else if (field.value.trim().length > 50) {
+            isValid = false;
+            message = 'Full name must be less than 50 characters.';
+          }
+          break;
+        case 'dob':
+          if (!field.value) {
+            isValid = false;
+            message = 'Date of birth is required.';
+          } else {
+            const date = new Date(field.value);
+            const today = new Date();
+            if (date >= today) {
+              isValid = false;
+              message = 'Date of birth must be in the past.';
+            }
+          }
+          break;
+        case 'email':
+          if (!field.value.trim()) {
+            isValid = false;
+            message = 'Email is required.';
+          } else {
+            const emailRegex =
+              /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(field.value.trim())) {
+              isValid = false;
+              message = 'Enter a valid email address.';
+            }
+          }
+          break;
+        case 'phone':
+          if (field.value.trim()) {
+            const phoneRegex = /^\+?[\d\s\-]{7,15}$/;
+            if (!phoneRegex.test(field.value.trim())) {
+              isValid = false;
+              message =
+                'Phone number must be between 7 and 15 digits, may include +, spaces or dashes.';
+            }
+          }
+          break;
+        case 'bio':
+          if (field.value.trim().length > 500) {
+            isValid = false;
+            message = 'Bio must be less than 500 characters.';
+          }
+          break;
+      }
+      identityErrors[field.name].textContent = message;
+      return isValid;
+    }
+
+    Object.values(identityFields).forEach((field) => {
+      field.addEventListener('input', () => validateIdentityField(field));
+    });
+
+    identityForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let isValid = true;
+      Object.values(identityFields).forEach((field) => {
+        if (!validateIdentityField(field)) isValid = false;
+      });
+      if (isValid) {
+        const identityData = {
+          fullName: identityFields.fullName.value.trim(),
+          dob: identityFields.dob.value,
+          email: identityFields.email.value.trim(),
+          phone: identityFields.phone.value.trim(),
+          bio: identityFields.bio.value.trim(),
+        };
+        localStorage.setItem('identityData', JSON.stringify(identityData));
+        updateSidebarUser(identityData.fullName);
+        showToast('Identity information saved successfully', 'success');
+      } else {
+        showToast('Please fix errors in the form before saving.', 'error');
+      }
+    });
+
+    // Qualification form validation & save
+    const qualificationForm = document.getElementById('qualification-form');
+    const qualificationFields = {
+      highestDegree: qualificationForm.elements.highestDegree,
+      fieldOfStudy: qualificationForm.elements.fieldOfStudy,
+      institutions: qualificationForm.elements.institutions,
+    };
+    const qualificationErrors = {
+      highestDegree: document.getElementById('highest-degree-error'),
+      fieldOfStudy: document.getElementById('field-of-study-error'),
+      institutions: document.getElementById('institutions-error'),
+    };
+
+    function validateQualificationField(field) {
+      let isValid = true;
+      let message = '';
+      if (field.name === 'highestDegree') {
+        if (!field.value) {
+          isValid = false;
+          message = 'Please select your highest degree.';
+        }
+      }
+      if (field.name === 'fieldOfStudy' && field.value.trim().length > 100) {
+        isValid = false;
+        message = 'Field of study must be less than 100 characters.';
+      }
+      if (field.name === 'institutions' && field.value.trim().length > 300) {
+        isValid = false;
+        message = 'Institutions info must be less than 300 characters.';
+      }
+      qualificationErrors[field.name].textContent = message;
+      return isValid;
+    }
+
+    Object.values(qualificationFields).forEach((field) => {
+      field.addEventListener('input', () => validateQualificationField(field));
+    });
+
+    qualificationForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let isValid = true;
+      Object.values(qualificationFields).forEach((field) => {
+        if (!validateQualificationField(field)) isValid = false;
+      });
+      if (isValid) {
+        const qualificationData = {
+          highestDegree: qualificationFields.highestDegree.value,
+          fieldOfStudy: qualificationFields.fieldOfStudy.value.trim(),
+          institutions: qualificationFields.institutions.value.trim(),
+        };
+        localStorage.setItem('qualificationData', JSON.stringify(qualificationData));
+        showToast('Qualifications saved successfully', 'success');
+      } else {
+        showToast('Please fix errors before saving qualifications.', 'error');
+      }
+    });
+
+    // Photo upload preview and validation
+    const photoForm = document.getElementById('photo-form');
+    const photoUpload = document.getElementById('photo-upload');
+    const photoPreview = document.getElementById('photo-preview');
+    const photoError = document.getElementById('photo-upload-error');
+    const clearPhotoBtn = document.getElementById('clear-photo-btn');
+
+    photoUpload.addEventListener('change', () => {
+      const file = photoUpload.files[0];
+      if (!file) return;
+
+      const allowedTypes = ['image/jpeg', 'image/png'];
+      if (!allowedTypes.includes(file.type)) {
+        photoError.textContent = 'Only JPEG and PNG images are allowed.';
+        photoUpload.value = '';
+        photoPreview.src = 'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/84dcaa30-544c-43d3-ad54-abc0083adb81.png';
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) {
+        photoError.textContent = 'File size must be less than 2MB.';
+        photoUpload.value = '';
+        photoPreview.src = 'https://placehold.co/120x120/6366f1/ffffff?text=No+Photo';
+        return;
+      }
+      photoError.textContent = '';
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        photoPreview.src = e.target.result;
+        savePhotoToStorage(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    clearPhotoBtn.addEventListener('click', () => {
+      photoUpload.value = '';
+      photoPreview.src = 'https://placehold.co/120x120/6366f1/ffffff?text=No+Photo';
+      photoError.textContent = '';
+      localStorage.removeItem('photoData');
+      showToast('Photo cleared', 'success');
+    });
+
+    // Save photo base64 data to localStorage
+    function savePhotoToStorage(dataUrl) {
+      localStorage.setItem('photoData', dataUrl);
+    }
+
+    // Contact form validation & save
+    const contactForm = document.getElementById('contact-form');
+    const contactFields = {
+      contactEmail: contactForm.elements.contactEmail,
+      contactPhone: contactForm.elements.contactPhone,
+      contactAddress: contactForm.elements.contactAddress,
+    };
+    const contactErrors = {
+      contactEmail: document.getElementById('contact-email-error'),
+      contactPhone: document.getElementById('contact-phone-error'),
+    };
+
+    function validateContactField(field) {
+      let isValid = true;
+      let message = '';
+      if (field.name === 'contactEmail') {
+        if (!field.value.trim()) {
+          isValid = false;
+          message = 'Email is required.';
+        } else {
+          const emailRegex =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(field.value.trim())) {
+            isValid = false;
+            message = 'Enter a valid email address.';
+          }
+        }
+      }
+      if (field.name === 'contactPhone' && field.value.trim()) {
+        const phoneRegex = /^\+?[\d\s\-]{7,15}$/;
+        if (!phoneRegex.test(field.value.trim())) {
+          isValid = false;
+          message =
+            'Phone number must be between 7 and 15 digits, may include +, spaces or dashes.';
+        }
+      }
+      contactErrors[field.name].textContent = message;
+      return isValid;
+    }
+
+    Object.values(contactFields).forEach((field) => {
+      if (field) {
+        field.addEventListener('input', () => validateContactField(field));
+      }
+    });
+
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let isValid = true;
+      if (!validateContactField(contactFields.contactEmail)) isValid = false;
+      if (contactFields.contactPhone && !validateContactField(contactFields.contactPhone)) isValid = false;
+      if (isValid) {
+        const contactData = {
+          contactEmail: contactFields.contactEmail.value.trim(),
+          contactPhone: contactFields.contactPhone.value.trim(),
+          contactAddress: contactFields.contactAddress.value.trim(),
+        };
+        localStorage.setItem('contactData', JSON.stringify(contactData));
+        updateContactDisplay(contactData);
+        showToast('Contact details saved successfully', 'success');
+      } else {
+        showToast('Please fix errors in contact form before saving.', 'error');
+      }
+    });
+
+    // Helper to update sidebar user name (used when identity form saved)
+    function updateSidebarUser(name) {
+      const userDisplayName = document.getElementById('user-name-display');
+      if (name) {
+        userDisplayName.textContent = name;
+      }
+    }
+
+    // Update contact info display panel
+    function updateContactDisplay(contact) {
+      const emailDisplay = document.getElementById('contact-email-display');
+      const phoneDisplay = document.getElementById('contact-phone-display');
+      const addressDisplay = document.getElementById('contact-address-display');
+
+      emailDisplay.textContent = contact.contactEmail || 'No email provided';
+      phoneDisplay.textContent = contact.contactPhone || 'No phone provided';
+      addressDisplay.textContent = contact.contactAddress || 'No address provided';
+    }
+
+    // Load saved data from localStorage
+    function loadSavedData() {
+      // Load identity
+      try {
+        const identityData = JSON.parse(localStorage.getItem('identityData'));
+        if (identityData) {
+          Object.entries(identityData).forEach(([key, value]) => {
+            if (identityFields[key]) {
+              identityFields[key].value = value || '';
+            }
+            if (key === 'fullName') {
+              updateSidebarUser(value);
+            }
+          });
+        }
+      } catch { }
+
+      // Load qualifications
+      try {
+        const qualificationData = JSON.parse(localStorage.getItem('qualificationData'));
+        if (qualificationData) {
+          Object.entries(qualificationData).forEach(([key, value]) => {
+            if (qualificationFields[key]) {
+              qualificationFields[key].value = value || '';
+            }
+          });
+        }
+      } catch {}
+
+      // Load photo
+      const photoBase64 = localStorage.getItem('photoData');
+      if (photoBase64) {
+        photoPreview.src = photoBase64;
+      }
+
+      // Load contact
+      try {
+        const contactData = JSON.parse(localStorage.getItem('contactData'));
+        if (contactData) {
+          Object.entries(contactData).forEach(([key, value]) => {
+            if (contactFields[key]) {
+              contactFields[key].value = value || '';
+            }
+          });
+          updateContactDisplay(contactData);
+        }
+      } catch {}
+    }
+
+    loadSavedData();
+
+
+  })();
+</script>
+</body>
+</html>
+
